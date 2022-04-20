@@ -1,0 +1,24 @@
+{
+  "name": "rizibizi-bot",
+  "version": "0.0.1",
+  "description": "A random Discord bot for Onekilobit Servers",
+  "main": "index.js",
+  "scripts": {
+    "test": "node ./index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SOM-0x3B1/rizibizi-bot2.git"
+  },
+  "keywords": [
+    "nodejs",
+    "discord",
+    "bot"
+  ],
+  "author": "SOM-0x3B1",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SOM-0x3B1/rizibizi-bot2/issues"
+  },
+  "homepage": "https://github.com/SOM-0x3B1/rizibizi-bot2#readme"
+}
