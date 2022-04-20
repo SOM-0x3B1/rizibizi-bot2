@@ -20,5 +20,13 @@
   "bugs": {
     "url": "https://github.com/SOM-0x3B1/rizibizi-bot2/issues"
   },
-  "homepage": "https://github.com/SOM-0x3B1/rizibizi-bot2#readme"
+  "homepage": "https://github.com/SOM-0x3B1/rizibizi-bot2#readme",
+  "dependencies": {
+    "@discordjs/rest": "^0.4.1",
+    "discord-api-types": "^0.31.2",
+    "discord.js": "^13.6.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.13.0"
+  }
 }
