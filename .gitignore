@@ -1,0 +1,7 @@
+/config.json
+/node_modules/
+*.png
+*.jpg
+*.mp3
+*.mp4
+*.gif
