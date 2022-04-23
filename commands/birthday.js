@@ -20,7 +20,7 @@ module.exports = {
         .setDescription('Shows birthday informations')
         .addSubcommand(subcommand =>
             subcommand
-                .setName('stalkUser')
+                .setName('stalk_user')
                 .setDescription('Displays a user\'s birthday')
                 .addUserOption(option =>
                     option
@@ -41,7 +41,7 @@ module.exports = {
             });
             await interaction.reply(users);
         }
-        else if (interaction.options.getSubcommand() === 'stalkuser') {
+        else if (interaction.options.getSubcommand() === 'stalk_user') {
             let res;
             const username = interaction.options.getUser('user').username;
             const discriminator = interaction.options.getUser('user').discriminator;
