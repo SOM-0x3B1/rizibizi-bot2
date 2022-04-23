@@ -11,6 +11,7 @@ module.exports = {
             .setColor('#E3581C')
             .setTitle('Welcome to Rizibizi!')
             .setAuthor({ name: 'Onekilobit Servers', iconURL: 'https://www.onekilobit.eu/media/rizibizi/icon.png', url: 'https://www.onekilobit.eu/' })
+            .setThumbnail('https://www.onekilobit.eu/media/rizibizi/pot-animated_5.png')
             .addFields({
                 name: 'Bot tag',
                 value: interaction.client.user.tag,
