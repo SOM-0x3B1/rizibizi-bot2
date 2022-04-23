@@ -20,11 +20,12 @@ module.exports = {
         .setDescription('Shows birthday informations')
         .addSubcommand(subcommand =>
             subcommand
-                .setName('stalkuser')
+                .setName('stalkUser')
                 .setDescription('Displays a user\'s birthday')
                 .addUserOption(option =>
                     option
                         .setName('user')
+                        .setRequired(true)
                         .setDescription('The user you want to stalk on')))
         .addSubcommand(subcommand =>
             subcommand
