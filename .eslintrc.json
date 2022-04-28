@@ -28,11 +28,6 @@
         ],
         "comma-spacing": "error",
         "comma-style": "error",
-        "curly": [
-            "error",
-            "multi-line",
-            "consistent"
-        ],
         "dot-location": [
             "error",
             "property"
@@ -51,6 +46,7 @@
                 "max": 2
             }
         ],
+        "no-case-declarations": "off",
         "no-console": "off",
         "no-empty-function": "error",
         "no-floating-decimal": "error",

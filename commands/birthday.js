@@ -32,23 +32,30 @@ module.exports = {
                 .setName('next')
                 .setDescription('Displays the next birthday')),
     async execute(interaction) {
-        if (interaction.options.getSubcommand() === 'next') {
-            let users = '';
-            db.query('SELECT TOP 1 name, date FROM users ORDER BY', (_, result) => {
-                for (const user of result) {
-                    users += `\n${user.name}:\t${user.date}`;
-                }
-            });
-            await interaction.reply(users);
-        }
-        else if (interaction.options.getSubcommand() === 'stalk_user') {
-            let res;
-            const username = interaction.options.getUser('user').username;
-            const discriminator = interaction.options.getUser('user').discriminator;
-            await db.query('SELECT name, date FROM users WHERE id = ? ', `${username}#${discriminator}`, (_, result) => {
-                res = result[0];
-                interaction.reply(`User ${username}#${discriminator} (${res.name}) was born on ${res.date}.`);
-            });
+        switch (interaction.options.getSubcommand()) {
+            case 'next':
+                let users = '';
+                db.query('SELECT name, date FROM users ORDER BY DATE LIMIT 1', (_, result) => {
+                    for (const user of result)
+                        users += `\n${user.name}: ${user.date}`;
+                    if (users)
+                        interaction.reply('Next birthday(s):' + users);
+                    else
+                        interaction.reply('nope');
+                });
+                break;
+            case 'stalk_user':
+                let res;
+                const username = interaction.options.getUser('user').username;
+                const discriminator = interaction.options.getUser('user').discriminator;
+                db.query('SELECT name, date FROM users WHERE id = ? ', `${username}#${discriminator}`, (_, resq) => {
+                    res = resq[0];
+                    if (res)
+                        interaction.reply(`User '${username}#${discriminator}' (${res.name}) was born on ${res.date}.`);
+                    else
+                        interaction.reply(`User '${username}#${discriminator}' was not found in the database.`);
+                });
+                break;
         }
     },
 };
