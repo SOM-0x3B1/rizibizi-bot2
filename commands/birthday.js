@@ -41,19 +41,18 @@ module.exports = {
                     if (users)
                         interaction.reply('Next birthday(s):' + users);
                     else
-                        interaction.reply('nope');
+                        interaction.reply('no thanks');
                 });
                 break;
             case 'stalk_user':
                 let res;
-                const username = interaction.options.getUser('user').username;
-                const discriminator = interaction.options.getUser('user').discriminator;
-                db.query('SELECT name, date FROM users WHERE id = ? ', `${username}#${discriminator}`, (_, resq) => {
+                const user = interaction.options.getUser('user');
+                db.query('SELECT date FROM users WHERE id = ? ', `${user.username}#${user.discriminator}`, (_, resq) => {
                     res = resq[0];
                     if (res)
-                        interaction.reply(`User '${username}#${discriminator}' (${res.name}) was born on ${res.date}.`);
+                        interaction.reply(`User '${user.username}#${user.discriminator}' was born on ${res.date}.`);
                     else
-                        interaction.reply(`User '${username}#${discriminator}' was not found in the database.`);
+                        interaction.reply(`User '${user.username}#${user.discriminator}' was not found in the database.`);
                 });
                 break;
         }
