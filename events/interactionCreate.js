@@ -25,14 +25,17 @@ module.exports = {
                         await interaction.reply({ content: 'Üdv a sutttyók közt! :leafy_green:', ephemeral: true });
                         console.log(interaction.user.username + ' subscribed');
                     }
-                    else
-                        await interaction.reply({ content: 'Skill issue: Még nem lehetsz dupla-suttyó.', ephemeral: true });
+                    else {
+                        await interaction.reply({ content: 'Skill issue: Tényleg dupla-suttyó akarsz lenni?', ephemeral: true });
+                        console.log(interaction.user.username + ' doublesubscribed');
+                    }
                     break;
                 case 'unsubToPSzI':
                     if (member.roles.cache.has(PSzIRoleId)) {
                         await member.roles.remove(PSzIRoleId);
                         await interaction.reply({ content: 'Már nem vagy suttyó. :bricks:', ephemeral: true });
                         console.log(interaction.user.username + ' unsubscribed');
+                        console.log(interaction.user.username + ' doubleunsubscribed');
                     }
                     else
                         await interaction.reply({ content: 'Skill issue: még nem is vagy suttyó.', ephemeral: true });

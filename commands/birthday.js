@@ -13,6 +13,16 @@ db.connect((err) => {
     if (err) throw err;
 });
 
+db.on('error', err => {
+    if (err.code === 'PROTOCOL_CONNECTION_LOST') {
+        db.connect((err) => {
+            if (err) throw err;
+        });
+    }
+    else
+        throw err;
+});
+
 
 module.exports = {
     data: new SlashCommandBuilder()
