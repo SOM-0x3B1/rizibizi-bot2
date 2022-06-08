@@ -1,28 +1,5 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
-const { createConnection } = require('mysql');
-const { dbpassword } = require('../config.json');
-
-const db = createConnection({
-    host: 'localhost',
-    user: 'rizibizi',
-    password: dbpassword,
-    database: 'rizibizi',
-    dateStrings: 'date',
-});
-db.connect((err) => {
-    if (err) throw err;
-});
-
-db.on('error', err => {
-    if (err.code === 'PROTOCOL_CONNECTION_LOST') {
-        db.connect((err) => {
-            if (err) throw err;
-        });
-    }
-    else
-        throw err;
-});
-
+const pool = require('../dbpool.js').getPool();
 
 module.exports = {
     data: new SlashCommandBuilder()
@@ -42,29 +19,32 @@ module.exports = {
                 .setName('next')
                 .setDescription('Displays the next birthday')),
     async execute(interaction) {
-        switch (interaction.options.getSubcommand()) {
-            case 'next':
-                let users = '';
-                db.query('SELECT name, date FROM users ORDER BY DATE LIMIT 1', (_, result) => {
-                    for (const user of result)
-                        users += `\n${user.name}: ${user.date}`;
-                    if (users)
-                        interaction.reply('Next birthday(s):' + users);
-                    else
-                        interaction.reply('no thanks');
-                });
-                break;
-            case 'stalk_user':
-                let res;
-                const user = interaction.options.getUser('user');
-                db.query('SELECT date FROM users WHERE id = ? ', `${user.username}#${user.discriminator}`, (_, resq) => {
-                    res = resq[0];
-                    if (res)
-                        interaction.reply(`User '${user.username}#${user.discriminator}' was born on ${res.date}.`);
-                    else
-                        interaction.reply(`User '${user.username}#${user.discriminator}' was not found in the database.`);
-                });
-                break;
-        }
+        pool.getConnection((_0, con) => {
+            switch (interaction.options.getSubcommand()) {
+                case 'next':
+                    let users = '';
+                    con.query('SELECT name, date FROM users ORDER BY DATE LIMIT 1', (_1, result) => {
+                        for (const user of result)
+                            users += `\n${user.name}: ${user.date}`;
+                        if (users)
+                            interaction.reply('Next birthday(s):' + users);
+                        else
+                            interaction.reply('no thanks');
+                    });
+                    break;
+                case 'stalk_user':
+                    let res;
+                    const user = interaction.options.getUser('user');
+                    con.query('SELECT date FROM users WHERE id = ? ', `${user.username}#${user.discriminator}`, (_1, resq) => {
+                        res = resq[0];
+                        if (res)
+                            interaction.reply(`User '${user.username}#${user.discriminator}' was born on ${res.date}.`);
+                        else
+                            interaction.reply(`User '${user.username}#${user.discriminator}' was not found in the database.`);
+                    });
+                    break;
+            }
+            con.release();
+        });
     },
 };
