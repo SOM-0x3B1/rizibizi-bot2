@@ -8,11 +8,11 @@ module.exports = {
         .addSubcommand(subcommand =>
             subcommand
                 .setName('subscribe')
-                .setDescription('Sends a panel with which ppl can get the suttyó role.'))
-        .addSubcommand(subcommand =>
-            subcommand
-                .setName('participate')
-                .setDescription('Sends a panel with which ppl can choose whether they\'ll come.')),
+                .setDescription('Sends a panel with which ppl can get the suttyó role.')),
+    /* .addSubcommand(subcommand =>
+        subcommand
+            .setName('participate')
+            .setDescription('Sends a panel with which ppl can choose whether they\'ll come.')),*/
     async execute(interaction) {
         const row = new MessageActionRow();
         switch (interaction.options.getSubcommand()) {
