@@ -1,6 +1,8 @@
 const { SlashCommandBuilder } = require('@discordjs/builders');
 const pool = require('../dbpool.js').getPool();
 
+const selectAll = 'SELECT name, day, month, num_month FROM birthdays INNER JOIN numeric_months ON birthdays.month = numeric_months.full_month ORDER BY num_month, day';
+
 module.exports = {
     data: new SlashCommandBuilder()
         .setName('birthday')
@@ -17,30 +19,60 @@ module.exports = {
         .addSubcommand(subcommand =>
             subcommand
                 .setName('next')
-                .setDescription('Displays the next birthday')),
+                .setDescription('Displays the next birthday'))
+        .addSubcommand(subcommand =>
+            subcommand
+                .setName('showall')
+                .setDescription('Displays all registered birthdays')),
     async execute(interaction) {
         pool.getConnection((_0, con) => {
+            let users = '';
             switch (interaction.options.getSubcommand()) {
                 case 'next':
-                    let users = '';
-                    con.query('SELECT name, date FROM users ORDER BY DATE LIMIT 1', (_1, result) => {
-                        for (const user of result)
-                            users += `\n${user.name}: ${user.date}`;
-                        if (users)
-                            interaction.reply('Next birthday(s):' + users);
+                    con.query(selectAll, (_1, result) => {
+                        if (result) {
+                            const today = new Date();
+                            const day = today.getDate();
+                            const month = today.getMonth() + 1;
+
+                            let i = 0;
+                            while (result[i].num_month < month || result[i].day <= day)
+                                i++;
+
+                            const targetMonth = result[i].num_month;
+                            const targetDay = result[i].day;
+
+                            while (result[i].num_month == targetMonth && result[i].day == targetDay) {
+                                users += `\n**${result[i].name}:** \t${result[i].month} ${result[i].day}.`;
+                                i++;
+                            }
+
+                            interaction.reply('A következő szülinap(ok):' + users);
+                        }
                         else
-                            interaction.reply('no thanks');
+                            interaction.reply('Hiba: adatbázis probléma');
                     });
                     break;
                 case 'stalk_user':
                     let res;
                     const user = interaction.options.getUser('user');
-                    con.query('SELECT date FROM users WHERE id = ? ', `${user.username}#${user.discriminator}`, (_1, resq) => {
+                    con.query('SELECT name, month, day FROM birthdays WHERE id = ? ', user.id, (_1, resq) => {
                         res = resq[0];
                         if (res)
-                            interaction.reply(`User '${user.username}#${user.discriminator}' was born on ${res.date}.`);
+                            interaction.reply(`${res.name} szülinapja: ${res.month} ${res.day}.`);
                         else
-                            interaction.reply(`User '${user.username}#${user.discriminator}' was not found in the database.`);
+                            interaction.reply(`'${user.username}#${user.discriminator}' nincs regisztrálva az adatbázisban.`);
+                    });
+                    break;
+                case 'showall':
+                    con.query(selectAll, (_1, result) => {
+                        if (result) {
+                            for (const u of result)
+                                users += `\n**${u.name}:** \t ${u.month} ${u.day}.`;
+                            interaction.reply('A regisztrált szülinapok listája:' + users);
+                        }
+                        else
+                            interaction.reply('Hiba: adatbázis probléma');
                     });
                     break;
             }
