@@ -1,5 +1,8 @@
+/* eslint-disable no-unused-vars */
 // const pool = require('../dbpool.js').getPool();
 const PSzIRoleId = '976893725873688699';
+
+const pool = require('../dbpool.js').getPool();
 
 module.exports = {
     name: 'interactionCreate',
@@ -41,12 +44,27 @@ module.exports = {
                         console.log(interaction.user.username + ' doubleunsubscribed');
                     }
                     break;
-                /* case 'come':
-                    await participate(interaction);
-                    await interaction.reply({ content: ':fire:', ephemeral: true });
-                    console.log(interaction.user.username + ' will come');
+                case 'payagain':
+                    const money = Math.floor(Math.random() * 50);
+                    pool.getConnection((_0, con) => {
+                        con.query('SELECT user FROM bmoney WHERE user = ?', member.id, (err, res1) => {
+                            if (err) throw err;
+                            if (res1.length == 0) {
+                                con.query('INSERT INTO bmoney (user, money) VALUES (?, ?)', [member.id, money], (err2, res2) => {
+                                    if (err2) throw err2;
+                                    console.log(`1 record (${member.username}) inserted`);
+                                });
+                            }
+                            else {
+                                con.query('UPDATE bmoney SET money = money + ? WHERE user = ?', [money, member.id], (err, _1) => {
+                                    if (err) throw err;
+                                });
+                            }
+                        });
+                    });
+                    interaction.reply({ content: `You got $${money}\nTake it and fuck off.` });
                     break;
-                case 'uncome':
+                /* case 'uncome':
                     await participate(interaction);
                     await interaction.reply({ content: 'Then take this :bricks: and fuck off', ephemeral: true });
                     console.log(interaction.user.username + ' won\'t come');

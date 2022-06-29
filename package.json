@@ -1,6 +1,6 @@
 {
   "name": "rizibizi-bot",
-  "version": "0.1.5",
+  "version": "0.3.6",
   "description": "A random Discord bot for Onekilobit Servers",
   "main": "index.js",
   "scripts": {
