@@ -36,7 +36,7 @@ module.exports = {
                             const month = today.getMonth() + 1;
 
                             let i = 0;
-                            while (result[i].num_month < month || result[i].day <= day)
+                            while (result[i].num_month < month || (result[i].num_month == month && result[i].day <= day))
                                 i++;
 
                             const targetMonth = result[i].num_month;
